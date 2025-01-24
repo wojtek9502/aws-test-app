@@ -1,35 +1,16 @@
 version: 0.0
 os: linux
 files:
-  - source: .
-    destination: /home/ec2-user/
-  - source: ./scripts/dash.service
-    destination: /etc/systemd/system/
-permissions:
-  - object: /home/ec2-user/scripts/install_dependencies.sh
-    owner: root
-    mode: 755
-    type:
-      - file
-  - object: /home/ec2-user/scripts/start_dash.sh
-    owner: root
-    mode: 755
-    type:
-      - file
-  - object: /home/ec2-user/scripts/stop_dash.sh
-    owner: root
-    mode: 755
-    type:
-      - file
+  - source: /index.php
+    destination: /var/www/html/
+  - source: /heman.jpeg
+    destination: /var/www/html/
 hooks:
-  AfterInstall:
-    - location: scripts/install_dependencies.sh
-      runas: root
-  ApplicationStart:
-    - location: scripts/start_dash.sh
+  BeforeInstall:
+    - location: deploy/stop_apache
       timeout: 300
       runas: root
-  ApplicationStop:
-    - location: scripts/stop_dash.sh
+  AfterInstall:
+    - location: deploy/start_apache
       timeout: 300
       runas: root
